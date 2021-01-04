@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "allowJs": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "preserveConstEnums": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist/",
+    "typeRoots": [
+      "node_modules/@types",
+      "global.d.ts"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "compileOnSave": false
+}
