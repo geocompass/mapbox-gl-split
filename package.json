@@ -7,13 +7,13 @@
   "keywords": [
     "splitscreen"
   ],
-  "homepage": "",
+  "homepage": "http://gitlab.geo-compass.com/xtgc/gde/gde-splitscreen/README.md",
   "repository": {
     "type": "git",
-    "url": "git+"
+    "url": "git+http://gitlab.geo-compass.com/xtgc/gde/gde-splitscreen.git"
   },
   "bugs": {
-    "url": ""
+    "url": "http://gitlab.geo-compass.com/xtgc/gde/gde-splitscreen/issues"
   },
   "main": "dist/bundle.js",
   "scripts": {
