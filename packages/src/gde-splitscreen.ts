@@ -5,7 +5,8 @@ import { optionsBase } from './options-base'
 import { utilsMergeOptions } from '../utils/options-merge'
 import { utilsSetDomStyle } from '../utils/dom-setstyle'
 import { untilsOptionElemCheck } from '../utils/options-check'
-// const syncMove = require('mapbox-gl-sync-move')
+import { utilsBase64Cursor } from '../utils/base64-cursor'
+const syncMaps = require('mapbox-gl-sync-move')
 
 /**
  * @description 分屏
@@ -81,12 +82,16 @@ export class GdeSplitScreen {
       utilsSetDomStyle(titleEle, titleStyle)
 
       // 地图渲染
-      item.optionMapbox.getCanvas().style.cursor = 'none'
+      item.optionMapbox.getCanvas().style.cursor = 'default'
     })
   }
 
   // 渲染模拟鼠标对比
   private renderCompareAnimate() {
     const screenOptions = this._options.screenOptions
+    syncMove(screenOptions[0].optionMapbox, screenOptions[1].optionMapbox)
+    screenOptions.forEach((item, index) => {
+
+    })
   }
 }
