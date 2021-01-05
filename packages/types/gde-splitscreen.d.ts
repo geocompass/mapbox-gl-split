@@ -6,6 +6,8 @@ interface DTitleOptions {
    * @param {number=} [fontSize=16] - fontSize
    * @param {number=} [color='rgba(0,0,0,0.7)'] - color
    */
+  position?: string;
+  zIndex?: number;
   left?: number;
   top?: number;
   fontSize?: number;

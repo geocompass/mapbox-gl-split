@@ -1,4 +1,5 @@
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
 
 module.exports = {
@@ -25,6 +26,14 @@ module.exports = {
   },
 
   plugins: [
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, '../packages/static'),
+          to: path.join(__dirname, '../dist/static')
+        }
+      ]
+    })
   ]
 }

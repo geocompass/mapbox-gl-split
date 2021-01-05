@@ -16,6 +16,19 @@ const utilsMergeOptions = ( optionsBase: DOptionsBase, options: DOptions ): Requ
     ...options.titleOptions
   }
 
+  newOptions.screenOptions = newOptions.screenOptions.map(item => {
+    return {
+      optionTitle: {
+        ...optionsBase.titleOptions,
+        ...item.optionTitle
+      },
+      optionContent: {
+        ...options.mapOtions,
+        ...item.optionContent
+      }
+    }
+  })
+
   return newOptions as Required<DOptions>
 }
 

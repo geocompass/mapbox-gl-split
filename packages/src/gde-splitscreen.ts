@@ -1,8 +1,11 @@
+import { Map } from 'mapbox-gl'
 import {
   DOptions
 } from '../types/gde-splitscreen'
 import { optionsBase } from './options-base'
 import { utilsMergeOptions } from '../utils/merge-options'
+import { utilsSetDomStyle } from '../utils/set-domstyle'
+const { GdeMapbox } = require('../static/gde-sdk/gde.min.js')
 
 /**
  * @description 分屏
@@ -10,10 +13,13 @@ import { utilsMergeOptions } from '../utils/merge-options'
 export class GdeSplitScreen {
   private _container: string
   private _options: Required<DOptions>
+  private _mapboxCollection: Array<Map>
 
   constructor(container: string, options: DOptions) {
     this._container = container
     this._options = utilsMergeOptions(optionsBase, options)
+
+    this._render()
   }
 
   private _render() {
@@ -21,7 +27,7 @@ export class GdeSplitScreen {
     this.splitScreen()
 
     // 渲染地图
-    this.renderMap()
+    this.renderScreenEle()
 
     // 渲染模拟鼠标对比
     this.renderCompareAnimate()
@@ -53,19 +59,54 @@ export class GdeSplitScreen {
     // 创建分屏元素
     for (let i = 0; i < screenLength; i++) {
       const eleScreen = document.createElement('div')
-      eleScreen.className = `m-screen__${i}`
+      eleScreen.id = `m-screen m-screen${i}`
       eleScreen.setAttribute('style', `width: ${screenWith}; height: ${screenHeight}; position: relative;`)
-      // TODO p setStyle
       eleScreen.innerHTML = `
-        <p class=m-screen__${i}_p>${screenOptions[i].optionTitle.text}</p>
+        <p class=m-screen__p m-screen__p${i}>${screenOptions[i].optionTitle.text}</p>
       `
       eleContainer.appendChild(eleScreen)
     }
   }
 
-  // 渲染地图
-  private renderMap() {}
+  // 渲染地图及标题
+  private renderScreenEle() {
+    const screenOptions = this._options.screenOptions
+    const container = this._container
+
+    // 设置外部容器的样式
+    const containerEle = document.getElementById(container) as HTMLElement
+    const containerStyle = {
+      'display': 'flex',
+      'flexWrap': 'wrap'
+    }
+    utilsSetDomStyle(containerEle, containerStyle)
+
+    // 屏渲染
+    screenOptions.forEach((item, index) => {
+      // 样式渲染
+      const screenEle = document.getElementById(`m-screen${index}`) as HTMLElement
+      const titleEle = document.getElementsByClassName('m-screen__p')[0] as HTMLElement
+      const screenStyle = {
+        'position': 'relative'
+      }
+      const titleStyle = item.optionTitle
+      utilsSetDomStyle(screenEle, screenStyle)
+      utilsSetDomStyle(titleEle, titleStyle)
+
+      // 地图渲染
+      const renderMap = new GdeMapbox({
+        container: screenEle,
+        style: item.optionContent.mapStyle,
+        center: item.optionContent.mapCenter,
+        zoom: item.optionContent.mapZoom
+      })
+      renderMap.getCanvas().style.cursor = 'none'
+      this._mapboxCollection.push(renderMap)
+    })
+  }
 
   // 渲染模拟鼠标对比
-  private renderCompareAnimate() {}
+  private renderCompareAnimate() {
+    const mapboxCollection = this._mapboxCollection
+  }
 }
