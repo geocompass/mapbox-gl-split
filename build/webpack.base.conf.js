@@ -1,5 +1,4 @@
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
 
 module.exports = {
@@ -8,7 +7,7 @@ module.exports = {
   output : {
     filename : 'bundle.js',
     path : path.join(__dirname, '../dist'),
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'umd'
   },
 
   resolve: {
@@ -26,14 +25,6 @@ module.exports = {
   },
 
   plugins: [
-    new CleanWebpackPlugin(),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.join(__dirname, '../packages/static'),
-          to: path.join(__dirname, '../dist/static')
-        }
-      ]
-    })
+    new CleanWebpackPlugin()
   ]
 }

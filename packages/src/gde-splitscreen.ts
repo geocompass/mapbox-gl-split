@@ -1,11 +1,11 @@
-import { Map } from 'mapbox-gl'
 import {
   DOptions
 } from '../types/gde-splitscreen'
 import { optionsBase } from './options-base'
-import { utilsMergeOptions } from '../utils/merge-options'
-import { utilsSetDomStyle } from '../utils/set-domstyle'
-const { GdeMapbox } = require('../static/gde-sdk/gde.min.js')
+import { utilsMergeOptions } from '../utils/options-merge'
+import { utilsSetDomStyle } from '../utils/dom-setstyle'
+import { untilsOptionElemCheck } from '../utils/options-check'
+// const syncMove = require('mapbox-gl-sync-move')
 
 /**
  * @description 分屏
@@ -13,7 +13,6 @@ const { GdeMapbox } = require('../static/gde-sdk/gde.min.js')
 export class GdeSplitScreen {
   private _container: string
   private _options: Required<DOptions>
-  private _mapboxCollection: Array<Map>
 
   constructor(container: string, options: DOptions) {
     this._container = container
@@ -23,13 +22,8 @@ export class GdeSplitScreen {
   }
 
   private _render() {
-    // 渲染分屏
     this.splitScreen()
-
-    // 渲染地图
     this.renderScreenEle()
-
-    // 渲染模拟鼠标对比
     this.renderCompareAnimate()
   }
 
@@ -37,18 +31,12 @@ export class GdeSplitScreen {
   private splitScreen() {
     const container = this._container
     const grid = this._options.grid
-    const screenLength = grid[0] * grid[1]
     const screenOptions = this._options.screenOptions
     let screenWith, screenHeight
     let eleContainer, containerWith, containerHeight
 
     // 获取container的宽高
-    if (typeof container === 'string') {
-      eleContainer = document.getElementById(container)
-      if (!eleContainer) throw new Error('ReferenceError: container必须是一个为id的字符串。')
-    } else {
-      throw new Error('ReferenceError: container未定义。')
-    }
+    eleContainer = untilsOptionElemCheck(container)
     containerWith = eleContainer.offsetWidth
     containerHeight = eleContainer.offsetHeight
 
@@ -57,14 +45,13 @@ export class GdeSplitScreen {
     screenHeight = containerHeight / grid[0]
 
     // 创建分屏元素
-    for (let i = 0; i < screenLength; i++) {
-      const eleScreen = document.createElement('div')
-      eleScreen.id = `m-screen m-screen${i}`
-      eleScreen.setAttribute('style', `width: ${screenWith}; height: ${screenHeight}; position: relative;`)
-      eleScreen.innerHTML = `
-        <p class=m-screen__p m-screen__p${i}>${screenOptions[i].optionTitle.text}</p>
-      `
-      eleContainer.appendChild(eleScreen)
+    for (let i = 0; i < screenOptions.length; i++) {
+      const eleScreen = untilsOptionElemCheck(screenOptions[i].optionContainer)
+      eleScreen.setAttribute('style', `position: relative; width: ${screenWith}px; height: ${screenHeight}px;`)
+      const eleScreenTitle = document.createElement('p')
+      eleScreenTitle.className = `m-screen__p m-screen__p${i}`
+      eleScreenTitle.innerHTML = screenOptions[i].optionTitle.text
+      eleScreen.appendChild(eleScreenTitle)
     }
   }
 
@@ -84,8 +71,8 @@ export class GdeSplitScreen {
     // 屏渲染
     screenOptions.forEach((item, index) => {
       // 样式渲染
-      const screenEle = document.getElementById(`m-screen${index}`) as HTMLElement
-      const titleEle = document.getElementsByClassName('m-screen__p')[0] as HTMLElement
+      const screenEle = document.getElementById(item.optionContainer) as HTMLElement
+      const titleEle = document.getElementsByClassName('m-screen__p')[index] as HTMLElement
       const screenStyle = {
         'position': 'relative'
       }
@@ -94,19 +81,12 @@ export class GdeSplitScreen {
       utilsSetDomStyle(titleEle, titleStyle)
 
       // 地图渲染
-      const renderMap = new GdeMapbox({
-        container: screenEle,
-        style: item.optionContent.mapStyle,
-        center: item.optionContent.mapCenter,
-        zoom: item.optionContent.mapZoom
-      })
-      renderMap.getCanvas().style.cursor = 'none'
-      this._mapboxCollection.push(renderMap)
+      item.optionMapbox.getCanvas().style.cursor = 'none'
     })
   }
 
   // 渲染模拟鼠标对比
   private renderCompareAnimate() {
-    const mapboxCollection = this._mapboxCollection
+    const screenOptions = this._options.screenOptions
   }
 }

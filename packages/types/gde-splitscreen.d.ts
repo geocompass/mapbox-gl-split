@@ -1,3 +1,5 @@
+import { Map } from 'mapbox-gl'
+
 interface DTitleOptions {
   /**
    * @description 所有标题配置
@@ -8,31 +10,25 @@ interface DTitleOptions {
    */
   position?: string;
   zIndex?: number;
-  left?: number;
-  top?: number;
-  fontSize?: number;
+  left?: string;
+  top?: string;
+  fontSize?: string;
   color?: string;
-}
-
-interface DMapOtions {
-  /**
-   * @description 所有地图配置
-   * @param {number[]} mapCenter 地图中心点
-   * @param {number} mapZoom 缩放级别
-   */
-  mapCenter: Array<number>;
-  mapZoom: number;
-}
-
-interface DContent extends DMapOtions {
-  mapStyle: any;
 }
 interface DTitle extends DTitleOptions {
   text: string;
 }
+
 interface DScreen {
+  /**
+   * @description 每屏
+   * @param {string} optionContainer - 每屏容器的id
+   * @param {object} optionTitle - 每屏的标题
+   * @param {function} optionMapbox - 每屏的地图
+   */
+  optionContainer: string;
   optionTitle: DTitle;
-  optionContent: DContent;
+  optionMapbox: Map;
 }
 
 export interface DOptionsBase {
@@ -50,13 +46,11 @@ export interface DOptions {
   /**
    * @description 分屏的配置参数
    * @param {number[]=} [grid=[1, 2]] 分屏布局，一行两列。
-   * @param {object} mapOtions 所有地图配置
    * @param {object} titleOptions 所有标题配置
    * @param {object} screenOptions 每屏详细配置
    */
 
    grid?: Array<number>;
-   mapOtions: DMapOtions;
    titleOptions?: DTitleOptions;
    screenOptions: Array<DScreen>;
 }
