@@ -1,12 +1,12 @@
-import {
-  DOptions
-} from '../types/gde-splitscreen'
+import { DOptions } from '../types/gde-splitscreen'
+import { Map } from 'mapbox-gl'
 import { optionsBase } from './options-base'
+
 import { utilsMergeOptions } from '../utils/options-merge'
 import { utilsSetDomStyle } from '../utils/dom-setstyle'
 import { untilsOptionElemCheck } from '../utils/options-check'
 import { utilsBase64Cursor } from '../utils/base64-cursor'
-const syncMaps = require('mapbox-gl-sync-move')
+import { syncMaps } from '../utils/lib-mapbox-gl-sync-move'
 
 /**
  * @description 分屏
@@ -28,7 +28,7 @@ export class GdeSplitScreen {
     this.renderCompareAnimate()
   }
 
-  // 渲染分屏
+  // 分屏
   private splitScreen() {
     const container = this._container
     const grid = this._options.grid
@@ -36,32 +36,37 @@ export class GdeSplitScreen {
     let screenWith, screenHeight
     let eleContainer, containerWith, containerHeight
 
-    // 获取container的宽高
+    // _设置每屏宽高
     eleContainer = untilsOptionElemCheck(container)
     containerWith = eleContainer.offsetWidth
     containerHeight = eleContainer.offsetHeight
-
-    // 分屏
     screenWith = containerWith / grid[1]
     screenHeight = containerHeight / grid[0]
 
-    // 创建分屏元素
+    // _创建元素
     for (let i = 0; i < screenOptions.length; i++) {
       const eleScreen = untilsOptionElemCheck(screenOptions[i].optionContainer)
       eleScreen.setAttribute('style', `position: relative; width: ${screenWith}px; height: ${screenHeight}px;`)
+      // 创建标题
       const eleScreenTitle = document.createElement('p')
       eleScreenTitle.className = `m-screen__p m-screen__p${i}`
       eleScreenTitle.innerHTML = screenOptions[i].optionTitle.text
       eleScreen.appendChild(eleScreenTitle)
+      // 创建光标
+      const eleScreenCursor = document.createElement('img')
+      eleScreenCursor.className = 'm-screen__cursor'
+      eleScreenCursor.src = utilsBase64Cursor
+      eleScreenCursor.setAttribute('style', 'position: absolute; zIndex: 9999;')
+      eleScreen.appendChild(eleScreenCursor)
     }
   }
 
-  // 渲染地图及标题
+  // 渲染地图元素
   private renderScreenEle() {
     const screenOptions = this._options.screenOptions
     const container = this._container
 
-    // 设置外部容器的样式
+    // _设置外部容器的样式
     const containerEle = document.getElementById(container) as HTMLElement
     const containerStyle = {
       'display': 'flex',
@@ -69,9 +74,8 @@ export class GdeSplitScreen {
     }
     utilsSetDomStyle(containerEle, containerStyle)
 
-    // 屏渲染
+    // _设置屏内元素样式渲染
     screenOptions.forEach((item, index) => {
-      // 样式渲染
       const screenEle = document.getElementById(item.optionContainer) as HTMLElement
       const titleEle = document.getElementsByClassName('m-screen__p')[index] as HTMLElement
       const screenStyle = {
@@ -80,18 +84,35 @@ export class GdeSplitScreen {
       const titleStyle = item.optionTitle
       utilsSetDomStyle(screenEle, screenStyle)
       utilsSetDomStyle(titleEle, titleStyle)
-
-      // 地图渲染
-      item.optionMapbox.getCanvas().style.cursor = 'default'
     })
   }
 
-  // 渲染模拟鼠标对比
+  // 模拟鼠标对比
   private renderCompareAnimate() {
     const screenOptions = this._options.screenOptions
-    syncMove(screenOptions[0].optionMapbox, screenOptions[1].optionMapbox)
-    screenOptions.forEach((item, index) => {
+    const EleCurosors = document.getElementsByClassName('m-screen__cursor')
+    let maps: Array<Map> = []
 
+    screenOptions.forEach((item, index) => {
+      maps.push(item.optionMapbox)
+      item.optionMapbox.getCanvas().style.cursor = 'default'
+
+      // _光标的移动
+      item.optionMapbox.on('mousemove', (e) => {
+        const cursorLeft = e.point.x + 'px'
+        const cursorTop = e.point.y + 'px'
+        screenOptions.forEach((_, k) => {
+          const otherEleCursor = EleCurosors[k] as HTMLElement
+          otherEleCursor.style.display = 'block'
+          otherEleCursor.style.left = cursorLeft
+          otherEleCursor.style.top = cursorTop
+        })
+        const targetEleCursor = EleCurosors[index] as HTMLElement
+        targetEleCursor.style.display = 'none'
+      })
     })
+
+    // _地图缩放、移动
+    syncMaps(...maps)
   }
 }
