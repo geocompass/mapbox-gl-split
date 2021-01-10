@@ -1,25 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "es5",
+    "outDir": "lib",
     "module": "commonjs",
     "allowJs": true,
     "sourceMap": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "inlineSources": true,
     "noImplicitAny": true,
+    "importHelpers": true,
     "removeComments": true,
     "noImplicitThis": true,
+    "esModuleInterop": true,
     "strictNullChecks": true,
+    "resolveJsonModule": true,
     "preserveConstEnums": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "./dist/",
-    "typeRoots": [
-      "node_modules/@types",
-      "global.d.ts"
-    ]
   },
   "exclude": [
     "node_modules"
   ],
-  "compileOnSave": false
+  "include": ["src"]
 }

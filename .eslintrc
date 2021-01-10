@@ -20,5 +20,10 @@
     "sourceType": "module"
   },
   "globals": {},
-  "rules": {}
+  "rules": {
+    "no-console": 1,
+    "consistent-this": 1,
+    "prettier/prettier": "error",
+    "@typescript-eslint/no-explicit-any": 0
+  }
 }

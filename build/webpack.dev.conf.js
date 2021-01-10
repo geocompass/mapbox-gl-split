@@ -1,16 +1,31 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { merge } = require('webpack-merge')
 const path = require('path')
+const { merge } = require('webpack-merge')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.conf')
 
 const devWebpackConfig = {
   mode: 'development',
   devtool: 'source-map',
-
+  devServer: {
+    contentBase: path.join(__dirname, "example"),
+    compress: true,
+    port: 9000
+  },
+  entry: path.resolve(__dirname, '../example/index.ts'),
+  
   plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, '../example/static'),
+          to: ('./static')
+        }
+      ]
+    }),
     new HtmlWebpackPlugin({
-      filename: path.join(__dirname, '../example/test.html'),
-      template: path.join(__dirname, '../packages/template/index.htm')
+      title: 'mapbox-gl-split',
+      template: path.join(__dirname, '../example/index.html')
     }),
   ]
 }

@@ -1,4 +1,4 @@
-function moveToMapPosition (master, clones) {
+function moveToMapPosition(master, clones) {
   var center = master.getCenter();
   var zoom = master.getZoom();
   var bearing = master.getBearing();
@@ -23,7 +23,7 @@ function moveToMapPosition (master, clones) {
 // - could cause an infinite loop
 // - prematurely halts prolonged movements like
 //   double-click zooming, box-zooming, and flying
-function syncMaps () {
+function syncMaps() {
   var maps;
   var argLen = arguments.length;
   if (argLen === 1) {
@@ -39,16 +39,22 @@ function syncMaps () {
   // they wouldn't be the same and couldn't be removed.
   var fns = [];
   maps.forEach(function (map, index) {
-    fns[index] = sync.bind(null, map, maps.filter(function (o, i) { return i !== index; }));
+    fns[index] = sync.bind(
+      null,
+      map,
+      maps.filter(function (o, i) {
+        return i !== index;
+      })
+    );
   });
 
-  function on () {
+  function on() {
     maps.forEach(function (map, index) {
       map.on('move', fns[index]);
     });
   }
 
-  function off () {
+  function off() {
     maps.forEach(function (map, index) {
       map.off('move', fns[index]);
     });
@@ -56,14 +62,17 @@ function syncMaps () {
 
   // When one map moves, we turn off the movement listeners
   // on all the maps, move it, then turn the listeners on again
-  function sync (master, clones) {
+  function sync(master, clones) {
     off();
     moveToMapPosition(master, clones);
     on();
   }
 
   on();
-  return function(){  off(); fns = []; };
+  return function () {
+    off();
+    fns = [];
+  };
 }
 
 export { syncMaps };
