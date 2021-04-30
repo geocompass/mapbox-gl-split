@@ -13,7 +13,7 @@
   "main": "lib/index.js",
   "module": "esm/index.js",
   "types": "lib/index.d.ts",
-  "unpkg": "lib/mapbox-gl-split.min.js",
+  "unpkg": "dist/mapbox-gl-split.min.js",
   "files": [
     "lib",
     "esm",
