@@ -17,7 +17,7 @@
 # mapbox-gl-split 地图分屏
 ## DEMO
 
-[Live DEMO](https://mrsmallliu.github.io/G2Plot-Lollipop/)
+[Live DEMO](https://geocompass.github.io/mapbox-gl-split/)
 ## Install
 
 ```sh
