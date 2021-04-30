@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to G2Plot-Lollipop 👋</h1>
+<h1 align="center">Welcome to mapbox-gl-split 👋</h1>
 <p>
   <a href="https://www.npmjs.com/package/mapbox-gl-split" target="_blank">
     <img alt="Version" src="https://img.shields.io/npm/v/mapbox-gl-split.svg">
@@ -14,13 +14,53 @@
   </a>
 </p>
 
-# mapbox-gl-js 分屏
-# 使用
-引入
+# mapbox-gl-split 地图分屏
+## DEMO
+
+[Live DEMO](https://mrsmallliu.github.io/G2Plot-Lollipop/)
+## Install
+
+```sh
+npm install --save mapbox-gl-split
+```
+
+## Usage
+
+> `mapbox-gl-split` 依赖 `mapbox-gl`，需要先引入` mapbox-gl`
+---
+- module模式
 ```js
+<div id="container">
+        <div id="container1"></div>
+        <div id="container2"></div>
+</div>
+
+import { SplitMap } from 'mapbox-gl-split'
+
 const map1 = new mapboxgl.Map({ container: 'container1', style });
 const map2 = new mapboxgl.Map({ container: 'container2', style });
+
 new SplitMap('container', {
   maps: [map1, map2]
 });
 ```
+---
+- HTML标签
+```js
+<div id="container">
+        <div id="container1"></div>
+        <div id="container2"></div>
+</div>
+
+<script src="https://unpkg.com/mapbox-gl-split"></script>
+
+<script>
+  const map1 = new mapboxgl.Map({ container: 'container1', style });
+  const map2 = new mapboxgl.Map({ container: 'container2', style });
+
+  new SplitMap('container', {
+    maps: [map1, map2]
+  });
+</script>
+```
+
