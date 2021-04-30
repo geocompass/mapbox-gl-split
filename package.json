@@ -1,7 +1,7 @@
 {
   "name": "mapbox-gl-split",
   "version": "1.0.0",
-  "description": "mapboxgl 分屏",
+  "description": "mapboxgl split",
   "author": "LH",
   "license": "ISC",
   "keywords": [],

@@ -5,7 +5,7 @@ import { syncMaps } from './utils/lib-mapbox-gl-sync-move';
 const defaultOptions = {
   row: 1
 };
-export class Split {
+export class SplitMap {
   public container: HTMLElement;
   public options: SplitOptions;
   constructor(container: string | HTMLElement, options: SplitOptions) {
@@ -17,7 +17,7 @@ export class Split {
       container = tempContainer;
     }
     this.container = container;
-    this.options = { ...defaultOptions, ...options };
+    this.options = { ...options, ...defaultOptions };
     this.init();
   }
   private init(): void {
@@ -32,6 +32,7 @@ export class Split {
 
     this.initMousemove();
 
+    // @ts-ignore
     syncMaps(...this.options.maps);
   }
 
@@ -56,23 +57,20 @@ export class Split {
       const mapContainer = map.getContainer();
       map.getCanvas().style.cursor = 'default';
 
-      // 3.设置样式
-      const style = {
-        position: 'relative'
-      };
-      setDomStyle(mapContainer, style);
-
       // 4.设置map container的宽 高 position
-      mapContainer.setAttribute('style', `position: relative; width: ${screenWith}px; height: ${screenHeight}px;`);
+      mapContainer.setAttribute('style', `width: ${screenWith}px; height: ${screenHeight}px;`);
 
-      // 5.创建光标element
+      // 5.地图改变大小
+      map.resize();
+
+      // 6.创建光标element
       const cursorEle = document.createElement('img');
       cursorEle.className = 'm-screen__cursor';
       cursorEle.id = 'm-screen__cursor_' + i;
       cursorEle.src = cursorBase64;
       cursorEle.setAttribute('style', 'position: absolute; zIndex: 9999;');
 
-      // 6.地图容器中增加鼠标element
+      // 7.地图容器中增加鼠标element
       mapContainer.appendChild(cursorEle);
     }
   }

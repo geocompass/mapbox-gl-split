@@ -1,1 +1,1 @@
-export { Split } from './split';
+export { SplitMap } from './split';

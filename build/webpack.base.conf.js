@@ -4,6 +4,7 @@ module.exports = {
   output : {
     filename : 'mapbox-gl-split.min.js',
     path : path.join(__dirname, '../dist'),
+    library: 'mapboxglSplit',
     libraryTarget: 'umd'
   },
 
