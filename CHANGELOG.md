@@ -4,8 +4,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### 1.0.1 (2021-04-30)
 
-### 1.0.1 (2021-04-30)
-
 ### Features
 
-* 发布1.0版本
+* 初次release
